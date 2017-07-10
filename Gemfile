@@ -5,6 +5,7 @@ gem 'rails', '~> 5.1.2'
 
 gem 'spring', :group => :development
 
+gem 'listen', :group => :development
 
 gem 'pg'
 
