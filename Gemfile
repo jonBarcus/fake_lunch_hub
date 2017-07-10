@@ -9,6 +9,7 @@ gem 'listen', :group => :development
 
 gem 'pg'
 
+gem 'rspec-rails'
 
 
 # To use ActiveModel has_secure_password
