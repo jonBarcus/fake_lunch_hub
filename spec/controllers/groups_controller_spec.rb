@@ -45,7 +45,7 @@ RSpec.describe GroupsController, type: :controller do
     it "returns a success response" do
       group = Group.create! valid_attributes
       get :index, params: {}, session: valid_session
-      expect(response).to be_success
+      expect(assigns(:groups)).to eq([group])
     end
   end
 
