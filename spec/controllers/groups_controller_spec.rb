@@ -42,7 +42,7 @@ RSpec.describe GroupsController, type: :controller do
   let(:valid_session) { {} }
 
   describe "GET #index" do
-    it "returns a success response" do
+    it "assigns all groups as @groups" do
       group = Group.create! valid_attributes
       get :index, params: {}, session: valid_session
       expect(assigns(:groups)).to eq([group])
@@ -50,25 +50,18 @@ RSpec.describe GroupsController, type: :controller do
   end
 
   describe "GET #show" do
-    it "returns a success response" do
+    it "assigns the requested group as @group" do
       group = Group.create! valid_attributes
       get :show, params: {id: group.to_param}, session: valid_session
-      expect(response).to be_success
-    end
-  end
-
-  describe "GET #new" do
-    it "returns a success response" do
-      get :new, params: {}, session: valid_session
-      expect(response).to be_success
+      expect(assigns(:group)).to eq([group])
     end
   end
 
   describe "GET #edit" do
-    it "returns a success response" do
+    it "assigns the requested group as @group" do
       group = Group.create! valid_attributes
       get :edit, params: {id: group.to_param}, session: valid_session
-      expect(response).to be_success
+      expect(assigns(:group)).to eq([group])
     end
   end
 
@@ -80,6 +73,12 @@ RSpec.describe GroupsController, type: :controller do
         }.to change(Group, :count).by(1)
       end
 
+      it "assigns a newly created group as @group" do
+        post :create, {:group => valid_attributes}, valid_session
+        expect(assigns(:group)).to be_a(Group)
+        expect(assigns(:group)).to be_persisted
+      end
+
       it "redirects to the created group" do
         post :create, params: {group: valid_attributes}, session: valid_session
         expect(response).to redirect_to(Group.last)
@@ -87,9 +86,14 @@ RSpec.describe GroupsController, type: :controller do
     end
 
     context "with invalid params" do
-      it "returns a success response (i.e. to display the 'new' template)" do
+      it "assigns a newly created but unsaved group as @group" do
         post :create, params: {group: invalid_attributes}, session: valid_session
-        expect(response).to be_success
+        expect(assigns(:group)).to be_a_new(Group)
+      end
+
+      it "re-renders the 'new' template" do
+        post :create, {:group => invalid_attributes}, valid_session
+        expect(response).to render_template("new")
       end
     end
   end
@@ -107,6 +111,11 @@ RSpec.describe GroupsController, type: :controller do
         skip("Add assertions for updated state")
       end
 
+      it "assigns the requested group as @group" do
+        group = Group.create! valid_attributes
+        put :update, {:id => group.to_param, :group => valid_attributes}, valid_session
+        expect(assigns(:group)).to eq(group)
+
       it "redirects to the group" do
         group = Group.create! valid_attributes
         put :update, params: {id: group.to_param, group: valid_attributes}, session: valid_session
@@ -115,10 +124,16 @@ RSpec.describe GroupsController, type: :controller do
     end
 
     context "with invalid params" do
-      it "returns a success response (i.e. to display the 'edit' template)" do
+      it "assigns the group as @group" do
         group = Group.create! valid_attributes
         put :update, params: {id: group.to_param, group: invalid_attributes}, session: valid_session
-        expect(response).to be_success
+        expect(assigns(:group)).to eq(group)
+      end
+
+      it "re-renders the 'edit' template" do
+        group = Group.create! valid_attributes
+        put :update, {:id => group.to_param, :group => invalid_attributes}, valid_session
+        expect(response).to render_template("edit")
       end
     end
   end
