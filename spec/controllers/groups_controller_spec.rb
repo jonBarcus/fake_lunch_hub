@@ -115,6 +115,7 @@ RSpec.describe GroupsController, type: :controller do
         group = Group.create! valid_attributes
         put :update, {:id => group.to_param, :group => valid_attributes}, valid_session
         expect(assigns(:group)).to eq(group)
+      end
 
       it "redirects to the group" do
         group = Group.create! valid_attributes
